@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!--    <include resource="org/springframework/cloud/gcp/autoconfigure/logging/logback-appender.xml" />-->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+    <appender name="CLOUD" class="com.google.cloud.logging.logback.LoggingAppender">
+        <!-- Optional : filter logs at or above a level -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <log>application.log</log> <!-- Optional : default java.log -->
+        <resourceType>gae_app</resourceType> <!-- Optional : default: auto-detected, fallback: global -->
+        <enhancer>com.example.logging.logback.enhancers.ExampleEnhancer</enhancer> <!-- Optional -->
+        <flushLevel>WARN</flushLevel> <!-- Optional : default ERROR -->
+    </appender>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+<!--            <pattern><![CDATA[%date{HH:mm:ss.SSS} [%thread] %-5level %logger{15}#%line %X{req.requestURI} traceId: %X{traceId} spanId: %X{span_id} %msg\n]]></pattern>-->
+        <pattern>%d{HH:mm:ss.SSS} [%t,%X{TraceID},%X{span_id},%X{trace_flags}] %highlight{%-5level} %c{2.} - %msg%n</pattern>
+        </encoder>
+
+    </appender>
+    <appender name="OTEL" class="io.opentelemetry.instrumentation.logback.v1_0.OpenTelemetryAppender">
+        <appender-ref ref="STDOUT" />
+    </appender>
+    <root level="INFO">
+        <!-- If running in GCP, remove the CONSOLE appender otherwise logs will be duplicated. -->
+        <appender-ref ref="CLOUD" />
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>

@@ -1,0 +1,8 @@
+logging:
+  level:
+    root: info
+  pattern:
+    console: '%d{HH:mm:ss.SSS} [%t,%X{trace_id}-%X{span_id}-%X{trace_flags}] %highlight{%-5level} %c{2.} - %msg%n'
+spring:
+  application:
+    name: gcp_test

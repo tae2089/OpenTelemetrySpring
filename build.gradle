@@ -1,0 +1,45 @@
+plugins {
+    id 'org.springframework.boot' version '2.6.5'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+// https://mvnrepository.com/artifact/com.google.cloud.opentelemetry/exporter-trace
+    runtimeOnly("io.opentelemetry.instrumentation:opentelemetry-logback-1.0:1.9.2-alpha")
+    implementation group: 'com.google.cloud.opentelemetry', name: 'exporter-trace', version: '0.20.0'
+    implementation platform('com.google.cloud:libraries-bom:25.0.0')
+//    implementation 'com.google.cloud:google-cloud-logging'
+    implementation 'com.google.cloud:google-cloud-logging-logback:0.123.6-alpha'
+    // https://mvnrepository.com/artifact/io.opentelemetry/opentelemetry-sdk
+    implementation group: 'io.opentelemetry', name: 'opentelemetry-sdk', version: '1.12.0'
+// https://mvnrepository.com/artifact/io.opentelemetry/opentelemetry-sdk-extension-autoconfigure
+    implementation group: 'io.opentelemetry', name: 'opentelemetry-sdk-extension-autoconfigure', version: '1.12.0-alpha'
+//// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-sleuth
+//    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-sleuth', version: '3.1.1'
+
+
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
